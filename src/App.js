@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import GroceryItem from './GroceryItem';
 import './App.css';
 
-const GROCERY_OBJECTS = []; // JS objects: item description, timestamp, etc...
+const GROCERY_OBJECTS = []; // JS objects: item description and date
 
 class App extends Component {
   constructor(props) {
@@ -10,14 +10,14 @@ class App extends Component {
 
     this.state = {
       groceries: [],
-      itemDescription: ''
+      itemDescription: '',
+      isButtonDisabled: false
     };
   }
 
   handleChange = (e) => {
     const { value } = e.target;
     this.setState({ itemDescription: value });
-    // console.log(e.target);
   }
 
   handleKeyPress = (e) => {
@@ -27,26 +27,27 @@ class App extends Component {
   }
 
   handleClickAddItem = () => {
-    if(this.state.itemDescription.trim() !== '') {
+    if(this.state.itemDescription.trim() !== '' && this.state.isButtonDisabled === false) {
       const object = { description: this.state.itemDescription, date: new Date() };
-      // console.log(object); // delete this line
       GROCERY_OBJECTS.push(object);
 
       this.setState({ 
         groceries: GROCERY_OBJECTS,
-        itemDescription: ''
+        itemDescription: '',
+        isButtonDisabled: true
       });
+      // set timeout to prevent repeated keys in the grocery list
+      setTimeout(() => this.setState({ isButtonDisabled: false }), 1000);
     }    
   }
 
-  handleClickRemoveItem = (item) => {
+  handleClickRemoveItem = (date) => {
     for(let i = 0; i < GROCERY_OBJECTS.length; i++) {
-      if(GROCERY_OBJECTS[i].description === item) {
+      if(GROCERY_OBJECTS[i].date === date) {
         GROCERY_OBJECTS.splice(i, 1);
         this.setState({ groceries: GROCERY_OBJECTS });
       }
     }  
-    // console.log(GROCERY_OBJECTS); // delete this
   }
 
   render() {
@@ -61,6 +62,7 @@ class App extends Component {
             value={this.state.itemDescription}
             onChange={this.handleChange} 
             onKeyPress={this.handleKeyPress}
+            placeholder="Enter Item"
           />
           <button onClick={this.handleClickAddItem}>Add to Shopping List</button>
         </div>
@@ -68,7 +70,7 @@ class App extends Component {
           <ul>
             {groceries.map((grocery) => 
                 <GroceryItem 
-                  key={grocery.description}
+                  key={grocery.date}
                   item={grocery.description}
                   date={grocery.date}
                   onClick={this.handleClickRemoveItem}

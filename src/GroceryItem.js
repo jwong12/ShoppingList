@@ -33,7 +33,7 @@ class GroceryItem extends Component {
                     <span>{this.props.item}</span>
                     <div>
                         <span className="time">{this.formatTimestamp()}</span>
-                        <button onClick={() => this.props.onClick(this.props.item)}>Delete</button>
+                        <button onClick={() => this.props.onClick(this.props.date)}>Delete</button>
                     </div>                    
                 </div>                
             </li>
