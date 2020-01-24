@@ -1,21 +1,31 @@
 .App {
   text-align: center;
-  background-color: lightblue;
+}
+
+#side-container {
+  font-size: 14px;
+}
+
+#total {
+  padding-right: 25px;
 }
 
 #items-container {
   text-align: left;
-  background-color: greenyellow;
   width: 400px;
   margin: auto;
 }
 
 ul {
   list-style-type: circle; 
+  margin: 10px 0;
+  border: 1px solid grey;
+  padding-left: 30px;
+  min-height: 27px;
 }
 
 ul li {
-  padding: 4px 0 4px 0;
+  padding: 3px 0 3px 0;
 }
 
 .item-wrapper {
@@ -23,7 +33,16 @@ ul li {
   justify-content: space-between;
 }
 
+.description {
+  padding-top: 2px;
+}
+
+.item-details {
+  display: inline-block;
+  min-width: 138px;
+}
+
 .time{
   font-size: 11px;
-  padding-right: 8px;
+  padding-right: 5px;
 }

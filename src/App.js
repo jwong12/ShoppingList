@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import GroceryItem from './GroceryItem';
 import './App.css';
 
-const GROCERY_OBJECTS = []; // JS objects: item description and date
+const GROCERY_OBJECTS = [];
 
 class App extends Component {
   constructor(props) {
@@ -10,14 +10,15 @@ class App extends Component {
 
     this.state = {
       groceries: [],
-      itemDescription: '',
-      isButtonDisabled: false
+      item: '',
+      isButtonDisabled: false,
+      sort: 'timestamp'
     };
   }
 
   handleChange = (e) => {
-    const { value } = e.target;
-    this.setState({ itemDescription: value });
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   }
 
   handleKeyPress = (e) => {
@@ -27,16 +28,16 @@ class App extends Component {
   }
 
   handleClickAddItem = () => {
-    if(this.state.itemDescription.trim() !== '' && this.state.isButtonDisabled === false) {
-      const object = { description: this.state.itemDescription, date: new Date() };
+    if(this.state.item.trim() !== '' && this.state.isButtonDisabled === false) {
+      const object = { description: this.state.item, date: new Date() };
       GROCERY_OBJECTS.push(object);
 
       this.setState({ 
         groceries: GROCERY_OBJECTS,
-        itemDescription: '',
+        item: '',
         isButtonDisabled: true
       });
-      // set timeout to prevent repeated keys in the grocery list
+      // setTimeout to prevent duplicate keys in the grocery list
       setTimeout(() => this.setState({ isButtonDisabled: false }), 1000);
     }    
   }
@@ -50,6 +51,32 @@ class App extends Component {
     }  
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { sort } = this.state;
+
+    if(prevState.sort !== sort) {
+      if(sort === "ascending") {
+        GROCERY_OBJECTS.sort((a, b) => {
+          if(a.description > b.description) return 1;
+          if(b.description > a.description) return -1;
+          return 0;
+        });
+
+      } else if(sort === "descending") {
+        GROCERY_OBJECTS.sort((a, b) => {
+          if(b.description > a.description) return 1;
+          if(a.description > b.description) return -1;
+          return 0;
+        });        
+
+      } else {
+        GROCERY_OBJECTS.sort((a, b) => a.date - b.date);
+      }
+
+      this.setState({ groceries: GROCERY_OBJECTS });
+    }
+  }
+
   render() {
     const { groceries } = this.state;
 
@@ -59,12 +86,26 @@ class App extends Component {
         <div>
           <input 
             type="text"
-            value={this.state.itemDescription}
+            name="item"
+            value={this.state.item}
             onChange={this.handleChange} 
             onKeyPress={this.handleKeyPress}
             placeholder="Enter Item"
           />
           <button onClick={this.handleClickAddItem}>Add to Shopping List</button>
+        </div><br/>
+        <div id="side-container">
+          <span id="total">Total Items: {GROCERY_OBJECTS.length}</span>
+          <label id="sort">Sort by: </label>
+          <select 
+            name="sort"
+            value={this.state.sort}
+            onChange={this.handleChange}
+          >
+            <option value="timestamp">Timestamp</option>
+            <option value="ascending">Ascending</option>
+            <option value="descending">Descending</option>
+          </select>
         </div>
         <div id="items-container">
           <ul>

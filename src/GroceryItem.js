@@ -20,18 +20,15 @@ class GroceryItem extends Component {
             time = `${date.getHours() - 12}:${minute} PM`;
         }
 
-        const timestamp = `${months[date.getMonth()]} ${date.getDate()} ${time}`;
-        // console.log(timestamp);
-        // console.log('formatTimestamp(): ' + this.props.date.toString());
-        return timestamp;
+        return `${months[date.getMonth()]} ${date.getDate()} ${time}`;
     }
 
     render() {
         return(
             <li>
                 <div className="item-wrapper">
-                    <span>{this.props.item}</span>
-                    <div>
+                    <span className="description">{this.props.item}</span>
+                    <div className="item-details">
                         <span className="time">{this.formatTimestamp()}</span>
                         <button onClick={() => this.props.onClick(this.props.date)}>Delete</button>
                     </div>                    
